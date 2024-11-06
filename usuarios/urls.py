@@ -1,0 +1,11 @@
+from django.urls import path
+from . import controllers
+
+urlpatterns = [
+    path('iniciar_sesion/', controllers.iniciar_sesion, name='iniciar_sesion'),        
+    path('cerrar_sesion/', controllers.cerrar_sesion, name='cerrar_sesion'),
+    path('listar_usuarios/', controllers.listar_usuarios, name='listar_usuarios'),
+    path('crear_usuario/', controllers.crear_usuario, name='crear_usuario'),
+    path('editar_usuario/<int:usuario_id>/', controllers.editar_usuario, name='editar_usuario'),
+    path('eliminar_usuario/<int:usuario_id>/', controllers.eliminar_usuario, name='eliminar_usuario'),  
+]

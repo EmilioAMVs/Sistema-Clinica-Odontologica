@@ -1,0 +1,27 @@
+<!-- clinica/templates/clinica/listar_historias_clinicas.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Listado de Historias Clínicas</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Fecha de Registro</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for historia in historias %}
+            <tr>
+                <td>{{ historia.paciente }}</td>
+                <td>{{ historia.fecha_registro }}</td>
+                <td>{{ historia.observaciones }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'crear_historia_clinica' %}" class="btn btn-primary mt-3">Crear Nueva Historia Clínica</a>
+</div>
+{% endblock %}

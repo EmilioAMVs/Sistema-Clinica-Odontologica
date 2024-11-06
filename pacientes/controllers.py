@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Paciente, HistoriaClinica
-from .forms import PacienteForm, HistoriaClinicaForm
+from .forms import PacienteForm
 
 # Listado de pacientes
 def lista_pacientes(request):

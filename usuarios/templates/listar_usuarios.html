@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Lista de Usuarios</h1>
+
+    <!-- Botón para crear un nuevo usuario -->
+    <button class="btn btn-primary mb-3" onclick="abrirFormularioCrear()">Crear Usuario</button>
+
+    <!-- Tabla de usuarios -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.telefono }}</td>
+                    <td>{{ usuario.direccion }}</td>
+                    <td>{{ usuario.rol.nombre }}</td>
+                    <td>
+                        <!-- Botón para editar usuario -->
+                        <button class="btn btn-success btn-sm" onclick="editarUsuario({{ usuario.id }})">Editar</button>
+
+                        <!-- Botón para eliminar usuario con confirmación -->
+                        <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion({{ usuario.id }})">Eliminar</button>
+
+                        <!-- Formulario oculto para la eliminación -->
+                        <form id="form-eliminar-{{ usuario.id }}" action="{% url 'eliminar_usuario' usuario.id %}" method="POST" style="display: none;">
+                            {% csrf_token %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- SweetAlert para mostrar mensajes de éxito o error -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Función para mostrar el formulario de creación de usuario dentro de un SweetAlert
+        function abrirFormularioCrear() {
+        // Realizar una solicitud AJAX para obtener el formulario
+       $.get("{% url 'crear_usuario' %}", function(response) {
+            // Cuando recibimos la respuesta, mostramos el formulario en el modal de SweetAlert
+            Swal.fire({
+                title: 'Crear Usuario',
+                html: response.form_html,  // Inyectamos el HTML del formulario
+                showCancelButton: true,
+                confirmButtonText: 'Crear',
+                cancelButtonText: 'Cancelar',
+                preConfirm: function() {
+                    // Antes de enviar el formulario, obtener los datos del formulario
+                    const formData = new FormData(document.getElementById('form-usuario'));
+                    
+                    // Enviar el formulario mediante AJAX
+                    return fetch("{% url 'crear_usuario' %}", {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => {
+                        return response.json();
+                    }).then(result => {
+                        if (result.status === 'success') {
+                            Swal.fire('¡Éxito!', result.message, 'success');
+                            // Aquí podrías agregar lógica para actualizar la lista de usuarios
+                        } else {
+                            Swal.fire('Error', result.message, 'error');
+                        }
+                    }).catch(error => {
+                        Swal.fire('Error', 'Hubo un problema al enviar el formulario.', 'error');
+                    });
+                }
+            });
+        });
+    }
+        // Función para mostrar el formulario de edición en SweetAlert
+        function editarUsuario(id) {
+            $.ajax({
+                url: '{% url "editar_usuario" 0 %}'.replace('0', id),
+                method: 'GET',
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Editar Usuario',
+                        html: response.form_html,  // Aquí se inyectará el HTML del formulario
+                        showCancelButton: true,
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            var formData = new FormData(document.getElementById('form-usuario'));
+                            $.ajax({
+                                url: '{% url "editar_usuario" 0 %}'.replace('0', id),
+                                method: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    Swal.fire(
+                                        '¡Éxito!',
+                                        response.message,
+                                        'success'
+                                    ).then(() => {
+                                        location.reload(); // Recargar la página para ver los cambios
+                                    });
+                                },
+                                error: function(response) {
+                                    Swal.fire(
+                                        'Error',
+                                        'Hubo un problema al editar el usuario.',
+                                        'error'
+                                    );
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Función de confirmación de eliminación con SweetAlert
+        function confirmarEliminacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`form-eliminar-${id}`).submit();
+                }
+            });
+        }
+    </script>
+</div>
+{% endblock %}

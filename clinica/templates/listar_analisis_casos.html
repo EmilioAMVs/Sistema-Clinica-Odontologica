@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Listado de Análisis de Casos</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Historia Clínica</th>
+                <th>Edad</th>
+                <th>Género</th>
+                <th>Síntomas</th>
+                <th>Tratamiento Recomendado</th>
+                <th>Fecha de Generación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for analisis in analisis_casos %}
+            <tr>
+                <td>{{ analisis.historia_clinica }}</td>
+                <td>{{ analisis.edad }}</td>
+                <td>{{ analisis.genero }}</td>
+                <td>{{ analisis.sintomas }}</td>
+                <td>{{ analisis.tratamiento_recomendado }}</td>
+                <td>{{ analisis.fecha_generacion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'crear_analisis_caso' %}" class="btn btn-primary mt-3">Crear Nuevo Análisis de Caso</a>
+</div>
+{% endblock %}

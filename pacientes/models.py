@@ -1,3 +1,4 @@
+# pacientes/models.py
 from django.db import models
 
 class Paciente(models.Model):
@@ -13,9 +14,9 @@ class Paciente(models.Model):
         return f'{self.nombre} {self.apellido}'
 
 class HistoriaClinica(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='historias_clinicas')  # Cambia aquí
     fecha_creacion = models.DateField(auto_now_add=True)
-    sintomas = models.TextField()  # Sintomas como lista en formato texto
+    sintomas = models.TextField()  # Síntomas como lista en formato texto
     observaciones = models.TextField(blank=True, null=True)
 
     def __str__(self):

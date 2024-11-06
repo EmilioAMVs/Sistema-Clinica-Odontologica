@@ -1,0 +1,14 @@
+<!-- clinica/templates/clinica/crear_analisis_caso.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Crear Análisis de Caso</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+    <a href="{% url 'listar_analisis_casos' %}" class="btn btn-secondary mt-3">Volver a Listar Análisis de Casos</a>
+</div>
+{% endblock %}

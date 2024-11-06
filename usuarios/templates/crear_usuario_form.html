@@ -1,0 +1,5 @@
+<form id="form-usuario" method="POST">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">  <!-- Aquí se inyecta el token CSRF -->
+    {{ form.as_p }}  <!-- Renderiza el formulario con los campos -->
+    <button type="submit" class="btn btn-success">Crear Usuario</button>
+</form>
