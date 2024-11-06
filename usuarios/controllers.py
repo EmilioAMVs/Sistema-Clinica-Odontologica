@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.template.loader import render_to_string
 from .models import Usuario
-from .forms import UsuarioForm
+from .forms import CustomUserCreationForm, CustomUserEditForm
 from clinica.decorators import admin_required, doctor_required, assistant_required
+
+def home(request):
+    return render(request, 'home.html')
 
 def iniciar_sesion(request):
     if request.method == 'GET':
@@ -26,22 +25,19 @@ def iniciar_sesion(request):
             })
         else:
             login(request, usuario)
-            
-            # Verificar el rol del usuario y redirigir al dashboard correspondiente
             usuario_detalle = Usuario.objects.get(user=usuario)
             if usuario_detalle.rol.nombre == 'admin':
-                return redirect('admin_dashboard')  # Ruta para el dashboard del administrador
+                return redirect('admin_dashboard')
             elif usuario_detalle.rol.nombre == 'doctor':
-                return redirect('doctor_dashboard')  # Ruta para el dashboard del estudiante
+                return redirect('doctor_dashboard')
             elif usuario_detalle.rol.nombre == 'ayudante':
-                return redirect('ayudante_dashboard')  # Ruta para el dashboard del profesor
+                return redirect('ayudante_dashboard')
             else:
-                return redirect('base')  # Ruta de inicio para otros casos
-
+                return redirect('home')
 
 def cerrar_sesion(request):
     logout(request)
-    return redirect('base')
+    return redirect('home')
 
 @admin_required
 def listar_usuarios(request):
@@ -49,53 +45,63 @@ def listar_usuarios(request):
     return render(request, 'listar_usuarios.html', {'usuarios': usuarios})
 
 @admin_required
-@admin_required
 def crear_usuario(request):
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 'success', 'message': 'El usuario ha sido creado exitosamente.'})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Error al crear el usuario. Intenta nuevamente.'})
-    
-    # En el caso de una solicitud GET, renderizamos el formulario vacío
-    form = UsuarioForm()
-    
-    # Obtener el token CSRF
-    csrf_token = get_token(request)
-    
-    # Renderizar el formulario y pasar el token CSRF
-    form_html = render_to_string('crear_usuario_form.html', {'form': form, 'csrf_token': csrf_token})
-    
-    return JsonResponse({'form_html': form_html})
-
-
-@admin_required
-def editar_usuario(request, pk):
-    usuario = get_object_or_404(Usuario, pk=pk)
-    
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST, instance=usuario)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'status': 'success', 'message': 'Usuario actualizado correctamente.'})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Error al actualizar el usuario.'})
-    
+    if request.method == 'GET':
+        return render(request, 'crear_usuario.html', {'form': CustomUserCreationForm()})
     else:
-        form = UsuarioForm(instance=usuario)
-    
-    # Enviar el formulario con los valores actuales para mostrarlo en el modal de SweetAlert
-    form_html = render_to_string('editar_usuario_form.html', {'form': form})
-    return JsonResponse({'form_html': form_html})
-
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario creado exitosamente.')
+            return redirect('listar_usuarios')
+        else:
+            return render(request, 'crear_usuario.html', {
+                'form': form,
+                'error': 'Error en los datos. Intenta nuevamente.'
+            })
 
 @admin_required
-def eliminar_usuario(request, pk):
-    usuario = get_object_or_404(Usuario, pk=pk)
+def editar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    
+    if request.method == 'GET':
+        form = CustomUserEditForm(instance=usuario)
+        return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
+    else:
+        form = CustomUserEditForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario actualizado correctamente.')
+            return redirect('listar_usuarios')
+        else:
+            return render(request, 'editar_usuario.html', {
+                'form': form,
+                'usuario': usuario,
+                'error': 'Error al actualizar el usuario. Intenta nuevamente.'
+            })
+
+@admin_required
+def eliminar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
     if request.method == 'POST':
         usuario.delete()
         messages.success(request, 'Usuario eliminado exitosamente.')
         return redirect('listar_usuarios')
     return render(request, 'eliminar_usuario.html', {'usuario': usuario})
+
+@admin_required
+def detalle_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    user = usuario.user 
+
+    context = {
+        'usuario': usuario,
+        'username': user.username,
+        'email': user.email,
+        'date_joined': user.date_joined,
+        'last_login': user.last_login,
+        'rol': usuario.rol,
+        'telefono': usuario.telefono,
+        'direccion': usuario.direccion,
+    }
+    return render(request, 'detalle_usuario.html', context)

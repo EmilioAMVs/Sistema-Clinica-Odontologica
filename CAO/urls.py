@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from usuarios import controllers as usuarios_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('clinica/', include('clinica.urls')),            # Rutas para la app clinica
+    path('clinica/', include('clinica.urls')),           # Rutas para la app clinica
     path('pacientes/', include('pacientes.urls')),       # Rutas para la app pacientes
     path('tratamientos/', include('tratamientos.urls')), # Rutas para la app tratamientos
     path('analisis/', include('analisis.urls')),         # Rutas para la app analisis
     path('usuarios/', include('usuarios.urls')),         # Rutas para la app usuarios
+    path('', usuarios_views.home, name='home'),          # Definir home como la vista raíz
 ]

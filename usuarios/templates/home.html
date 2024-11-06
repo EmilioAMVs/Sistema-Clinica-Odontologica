@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center py-5">
+        <h1 class="display-4">Bienvenido a DentalSys</h1>
+        <p class="lead">La solución integral para la gestión de clínicas odontológicas.</p>
+        <hr class="my-4">
+        <p>Por favor, inicia sesión para acceder a las funcionalidades de DentalSys.</p>
+        <a class="btn btn-primary btn-lg mt-3" href="{% url 'iniciar_sesion' %}" role="button">Iniciar Sesión</a>
+    </div>
+</div>
+{% endblock %}

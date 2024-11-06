@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h2>Detalles del Usuario: {{ username }}</h2>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Nombre de usuario:</strong> {{ username }}</li>
+                <li class="list-group-item"><strong>Correo electrónico:</strong> {{ email }}</li>
+                <li class="list-group-item"><strong>Fecha de creación:</strong> {{ date_joined|date:"d/m/Y H:i" }}</li>
+                <li class="list-group-item"><strong>Último inicio de sesión:</strong> {{ last_login|date:"d/m/Y H:i" }}</li>
+                <li class="list-group-item"><strong>Rol:</strong> {{ rol.nombre }}</li>
+                <li class="list-group-item"><strong>Teléfono:</strong> {{ telefono }}</li>
+                <li class="list-group-item"><strong>Dirección:</strong> {{ direccion }}</li>
+            </ul>
+            <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary mt-3">Regresar a la Lista</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

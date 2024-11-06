@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2>Crear Usuario</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.username.label_tag }} {{ form.username }}
+                {{ form.password.label_tag }} {{ form.password }}
+                {{ form.email.label_tag }} {{ form.email }}
+                {{ form.rol.label_tag }} {{ form.rol }}
+                {{ form.telefono.label_tag }} {{ form.telefono }}
+                {{ form.direccion.label_tag }} {{ form.direccion }}
+
+                <button class="btn btn-primary mt-3" type="submit">Crear</button>
+                <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary mt-3">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

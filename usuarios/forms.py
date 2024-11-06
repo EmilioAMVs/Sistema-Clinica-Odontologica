@@ -1,26 +1,41 @@
+# forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Usuario, Rol
 
-class UsuarioForm(UserCreationForm):
-    rol = forms.ModelChoiceField(queryset=Rol.objects.all(), required=True, label="Rol")
-    telefono = forms.CharField(max_length=20, required=True, label="Teléfono")
-    direccion = forms.CharField(max_length=255, required=True, label="Dirección")
+class CustomUserCreationForm(forms.ModelForm):
+    username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label="Correo electrónico", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    rol = forms.ModelChoiceField(queryset=Rol.objects.all(), label="Rol", widget=forms.Select(attrs={'class': 'form-control'}))
+    telefono = forms.CharField(label="Teléfono", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    direccion = forms.CharField(label="Dirección", widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2', 'email']
+        model = Usuario
+        fields = ['username', 'password', 'email', 'rol', 'telefono', 'direccion']
 
     def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
+        # Crear usuario en User y asociarlo con Usuario
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            password=self.cleaned_data['password'],
+            email=self.cleaned_data['email']
+        )
+        usuario = Usuario(user=user, rol=self.cleaned_data['rol'],
+                          telefono=self.cleaned_data['telefono'],
+                          direccion=self.cleaned_data['direccion'])
         if commit:
-            user.save()
-            Usuario.objects.create(
-                user=user,
-                rol=self.cleaned_data['rol'],
-                telefono=self.cleaned_data['telefono'],
-                direccion=self.cleaned_data['direccion']
-            )
-        return user
+            usuario.save()
+        return usuario
+
+class CustomUserEditForm(forms.ModelForm):
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label="Correo electrónico", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    rol = forms.ModelChoiceField(queryset=Rol.objects.all(), label="Rol", widget=forms.Select(attrs={'class': 'form-control'}))
+    telefono = forms.CharField(label="Teléfono", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    direccion = forms.CharField(label="Dirección", widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Usuario
+        fields = ['password', 'email', 'rol', 'telefono', 'direccion']

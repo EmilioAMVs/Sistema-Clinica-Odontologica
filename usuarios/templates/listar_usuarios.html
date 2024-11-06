@@ -1,149 +1,74 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Lista de Usuarios</h1>
+<h1>Lista de Usuarios</h1>
+<br>
+<div class="mb-3">
+    <a href="{% url 'crear_usuario' %}" class="btn btn-primary">Crear Nuevo Usuario</a>
+</div>
 
-    <!-- Botón para crear un nuevo usuario -->
-    <button class="btn btn-primary mb-3" onclick="abrirFormularioCrear()">Crear Usuario</button>
-
-    <!-- Tabla de usuarios -->
-    <table class="table table-bordered table-striped">
+{% if usuarios %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Telefono</th>
-                <th>Direccion</th>
-                <th>Rol</th>
-                <th>Acciones</th>
+                <th class="text-center">Nombre de Usuario</th>
+                <th class="text-center">Correo</th>
+                <th class="text-center">Rol</th>
+                <th class="text-center">Teléfono</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for usuario in usuarios %}
-                <tr>
-                    <td>{{ usuario.id }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.telefono }}</td>
-                    <td>{{ usuario.direccion }}</td>
-                    <td>{{ usuario.rol.nombre }}</td>
-                    <td>
-                        <!-- Botón para editar usuario -->
-                        <button class="btn btn-success btn-sm" onclick="editarUsuario({{ usuario.id }})">Editar</button>
+            <tr>
+                <td class="text-center"><a href="{% url 'detalle_usuario' usuario.id %}">{{ usuario.user.username }}</a></td>
+                <td class="text-center">{{ usuario.user.email }}</td>
+                <td class="text-center">{{ usuario.rol.nombre }}</td>
+                <td class="text-center">{{ usuario.telefono }}</td>
+                <td class="text-center">{{ usuario.direccion }}</td>
+                <td class="text-center">
+                    
+                    <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-info btn-sm">Editar</a>
+                    <!-- Botón para abrir el modal de confirmación -->
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion{{ usuario.id }}">
+                        Eliminar
+                    </button>
 
-                        <!-- Botón para eliminar usuario con confirmación -->
-                        <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion({{ usuario.id }})">Eliminar</button>
-
-                        <!-- Formulario oculto para la eliminación -->
-                        <form id="form-eliminar-{{ usuario.id }}" action="{% url 'eliminar_usuario' usuario.id %}" method="POST" style="display: none;">
-                            {% csrf_token %}
-                        </form>
-                    </td>
-                </tr>
+                    <!-- Modal de confirmación -->
+                    <div class="modal fade" id="confirmarEliminacion{{ usuario.id }}" tabindex="-1" aria-labelledby="modalLabel{{ usuario.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel{{ usuario.id }}">Confirmar Eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas eliminar al usuario <strong>{{ usuario.user.username }}</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <!-- SweetAlert para mostrar mensajes de éxito o error -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        // Función para mostrar el formulario de creación de usuario dentro de un SweetAlert
-        function abrirFormularioCrear() {
-        // Realizar una solicitud AJAX para obtener el formulario
-       $.get("{% url 'crear_usuario' %}", function(response) {
-            // Cuando recibimos la respuesta, mostramos el formulario en el modal de SweetAlert
-            Swal.fire({
-                title: 'Crear Usuario',
-                html: response.form_html,  // Inyectamos el HTML del formulario
-                showCancelButton: true,
-                confirmButtonText: 'Crear',
-                cancelButtonText: 'Cancelar',
-                preConfirm: function() {
-                    // Antes de enviar el formulario, obtener los datos del formulario
-                    const formData = new FormData(document.getElementById('form-usuario'));
-                    
-                    // Enviar el formulario mediante AJAX
-                    return fetch("{% url 'crear_usuario' %}", {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => {
-                        return response.json();
-                    }).then(result => {
-                        if (result.status === 'success') {
-                            Swal.fire('¡Éxito!', result.message, 'success');
-                            // Aquí podrías agregar lógica para actualizar la lista de usuarios
-                        } else {
-                            Swal.fire('Error', result.message, 'error');
-                        }
-                    }).catch(error => {
-                        Swal.fire('Error', 'Hubo un problema al enviar el formulario.', 'error');
-                    });
-                }
-            });
-        });
-    }
-        // Función para mostrar el formulario de edición en SweetAlert
-        function editarUsuario(id) {
-            $.ajax({
-                url: '{% url "editar_usuario" 0 %}'.replace('0', id),
-                method: 'GET',
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Editar Usuario',
-                        html: response.form_html,  // Aquí se inyectará el HTML del formulario
-                        showCancelButton: true,
-                        focusConfirm: false,
-                        preConfirm: () => {
-                            var formData = new FormData(document.getElementById('form-usuario'));
-                            $.ajax({
-                                url: '{% url "editar_usuario" 0 %}'.replace('0', id),
-                                method: 'POST',
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(response) {
-                                    Swal.fire(
-                                        '¡Éxito!',
-                                        response.message,
-                                        'success'
-                                    ).then(() => {
-                                        location.reload(); // Recargar la página para ver los cambios
-                                    });
-                                },
-                                error: function(response) {
-                                    Swal.fire(
-                                        'Error',
-                                        'Hubo un problema al editar el usuario.',
-                                        'error'
-                                    );
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-
-        // Función de confirmación de eliminación con SweetAlert
-        function confirmarEliminacion(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById(`form-eliminar-${id}`).submit();
-                }
-            });
-        }
-    </script>
 </div>
+{% else %}
+    <p>No hay usuarios registrados</p>
+{% endif %}
+
+<!-- Mostrar mensaje de éxito al eliminar -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success mt-3">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 {% endblock %}
