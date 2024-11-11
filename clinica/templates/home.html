@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center py-5">
+        {% if user.is_authenticated %}
+            <h1 class="display-4">Bienvenido a DentalSys, {{ user.username }}!</h1>
+            <p class="lead">Rol: {{ user.usuario.rol.nombre }}</p>
+            <hr class="my-4">
+            <p>Accede a tu dashboard para gestionar las funcionalidades de DentalSys.</p>
+
+            {% if user.usuario.rol.nombre == 'admin' %}
+                <a class="btn btn-primary btn-lg mt-3" href="{% url 'admin_dashboard' %}" role="button">Ir al Dashboard de Administrador</a>
+            {% elif user.usuario.rol.nombre == 'doctor' %}
+                <a class="btn btn-primary btn-lg mt-3" href="{% url 'doctor_dashboard' %}" role="button">Ir al Dashboard de Doctor</a>
+            {% elif user.usuario.rol.nombre == 'ayudante' %}
+                <a class="btn btn-primary btn-lg mt-3" href="{% url 'ayudante_dashboard' %}" role="button">Ir al Dashboard de Ayudante</a>
+            {% endif %}
+        {% else %}
+            <h1 class="display-4">Bienvenido a DentalSys</h1>
+            <p class="lead">La solución integral para la gestión de clínicas odontológicas.</p>
+            <hr class="my-4">
+            <p>Por favor, inicia sesión para acceder a las funcionalidades de DentalSys.</p>
+            <a class="btn btn-primary btn-lg mt-3" href="{% url 'iniciar_sesion' %}" role="button">Iniciar Sesión</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -4,10 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .models import Usuario
 from .forms import CustomUserCreationForm, CustomUserEditForm
-from clinica.decorators import admin_required, doctor_required, assistant_required
-
-def home(request):
-    return render(request, 'home.html')
+from clinica.decorators import admin_required
 
 def iniciar_sesion(request):
     if request.method == 'GET':
@@ -34,7 +31,7 @@ def iniciar_sesion(request):
                 return redirect('ayudante_dashboard')
             else:
                 return redirect('home')
-
+ 
 def cerrar_sesion(request):
     logout(request)
     return redirect('home')
@@ -62,23 +59,26 @@ def crear_usuario(request):
 
 @admin_required
 def editar_usuario(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    
+    usuario_instance = get_object_or_404(Usuario, id=usuario_id)
+    user_instance = usuario_instance.user  # Obtener la instancia de User asociada
+
     if request.method == 'GET':
-        form = CustomUserEditForm(instance=usuario)
-        return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
+        form = CustomUserEditForm(instance=usuario_instance, user_instance=user_instance)
+        return render(request, 'editar_usuario.html', {'form': form, 'usuario': user_instance})
+
     else:
-        form = CustomUserEditForm(request.POST, instance=usuario)
+        form = CustomUserEditForm(request.POST, instance=usuario_instance, user_instance=user_instance)
         if form.is_valid():
-            form.save()
+            form.save()  # Guardar tanto el modelo Usuario como User
             messages.success(request, 'Usuario actualizado correctamente.')
-            return redirect('listar_usuarios')
+            return redirect('listar_usuarios')  # Redirige a la lista de usuarios
         else:
             return render(request, 'editar_usuario.html', {
                 'form': form,
-                'usuario': usuario,
+                'usuario': user_instance,
                 'error': 'Error al actualizar el usuario. Intenta nuevamente.'
             })
+
 
 @admin_required
 def eliminar_usuario(request, usuario_id):

@@ -26,19 +26,21 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <a class="nav-link" href="">Historias Clinicas</a>
+                        {% if user.usuario.rol.nombre == 'admin' %}
+                        <a class="nav-link" href="{% url 'listar_usuarios' %}">Usuarios</a>
+                        {% endif %}
                         {% else %}
                         {% endif %}
                     </li>
                     <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <a class="nav-link" href="">Pacientes</a>
+                        <a class="nav-link" href="{% url 'listar_pacientes' %}">Pacientes</a>
                         {% else %}
                         {% endif %}
                     </li>
                     <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <a class="nav-link" href="">Usuarios</a>
+                        <a class="nav-link" href="{% url 'listar_historias' %}">Historias Clinicas</a>
                         {% else %}
                         {% endif %}
                     </li>
@@ -51,9 +53,6 @@
                         <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar sesión</a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registrarse' %}">Registro</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'iniciar_sesion' %}">Iniciar sesión</a>
                     </li>

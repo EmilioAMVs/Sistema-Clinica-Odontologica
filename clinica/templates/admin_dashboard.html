@@ -14,20 +14,20 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card text-white bg-secondary mb-3">
+                <div class="card text-black bg-secondary mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Historias Clínicas</h5>
                         <p class="card-text">{{ total_historias_clinicas }}</p>
-                        <a href="{% url 'listar_historias_clinicas' %}" class="btn btn-light">Ver Historias</a>
+                        <a href="{% url 'listar_historias' %}" class="btn btn-light">Ver Historias</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-info mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Análisis de Casos</h5>
+                        <h5 class="card-title">Pacientes</h5>
                         <p class="card-text">{{ total_analisis_casos }}</p>
-                        <a href="{% url 'listar_analisis_casos' %}" class="btn btn-light">Ver Análisis</a>
+                        <a href="{% url 'listar_pacientes' %}" class="btn btn-light">Ver Pacientes</a>
                     </div>
                 </div>
             </div>

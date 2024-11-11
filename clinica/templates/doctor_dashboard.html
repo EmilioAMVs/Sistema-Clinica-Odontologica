@@ -1,15 +1,28 @@
-{% extends "base.html" %}
-
-{% block title %}Dashboard Doctor{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-<h1 class="text-center">Dashboard Doctor</h1>
-<div class="row">
-    <div class="col-md-6">
-        <a href="{% url 'listar_historias_clinicas' %}" class="btn btn-secondary w-100 mb-3">Ver Historias Clínicas</a>
+<body>
+    <div class="container mt-4">
+        <h1>Dashboard Doctor</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-black bg-secondary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Historias Clínicas</h5>
+                        <p class="card-text">{{ total_historias_clinicas }}</p>
+                        <a href="{% url 'listar_historias' %}" class="btn btn-light">Ver Historias</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Pacientes</h5>
+                        <p class="card-text">{{ total_analisis_casos }}</p>
+                        <a href="{% url 'listar_pacientes' %}" class="btn btn-light">Ver Pacientes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <a href="{% url 'listar_analisis_casos' %}" class="btn btn-secondary w-100 mb-3">Ver Análisis de Casos</a>
-    </div>
-</div>
+</body>
 {% endblock %}

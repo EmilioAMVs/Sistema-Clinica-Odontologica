@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h2>Detalles de Historia Clínica</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Paciente:</strong> {{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</p>
+            <p><strong>Doctor:</strong> {{ historia.doctor.username }}</p>
+            <p><strong>Fecha de Creación:</strong> {{ historia.fecha_creacion }}</p>
+            <p><strong>Síntomas:</strong> {{ historia.sintomas }}</p>
+            <p><strong>Diagnóstico:</strong> {{ historia.diagnostico }}</p>
+            <p><strong>Observaciones:</strong> {{ historia.observaciones }}</p>
+            <p><strong>Próximo Control:</strong> {{ historia.proximo_control }}</p>
+
+            <h4>Tratamientos Aplicados:</h4>
+            <ul>
+                {% for tratamiento in historia.tratamientos_aplicados.all %}
+                    <li>{{ tratamiento.nombre }}</li>
+                {% empty %}
+                    <li>No hay tratamientos aplicados.</li>
+                {% endfor %}
+            </ul>
+
+            <a href="{% url 'detalle_paciente' historia.paciente.id %}" class="btn btn-secondary mt-3">Volver al Paciente</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

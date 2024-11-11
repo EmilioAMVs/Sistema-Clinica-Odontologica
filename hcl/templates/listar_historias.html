@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Historias Clínicas</h1>
+<br>
+{% if user.is_authenticated %}
+{% if user.usuario.rol.nombre == 'doctor' %}
+<div class="mb-3">
+    <a href="{% url 'crear_historia' %}" class="btn btn-primary">Nueva Historia Clínica</a>
+</div>
+{% endif %}
+{% else %} 
+{% endif %}
+
+{% if historias %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">Paciente</th>
+                <th class="text-center">Fecha de Creación</th>
+                <th class="text-center">Doctor Asignado</th>
+                <th class="text-center">Tratamiento</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for historia in historias %}
+            <tr>
+                <td class="text-center"><a href="{% url 'detalle_paciente' historia.paciente.id %}">{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</a></td>
+                <td class="text-center">{{ historia.fecha_creacion }}</td>
+                <td class="text-center">{{ historia.doctor_asignado.username }}</td>
+                <td class="text-center">{{ historia.tratamiento }}</td>
+                <td class="text-center">
+                    <a href="{% url 'detalle_historia' historia.id %}" class="btn btn-info btn-sm">Ver Detalles</a>
+                    {% if user.is_authenticated %}
+                    {% if user.usuario.rol.nombre == 'doctor' or user.usuario.rol.nombre == 'admin' %}
+                    <a href="{% url 'editar_historia' historia.id %}" class="btn btn-info btn-sm">Editar</a>
+                    <!-- Botón para abrir el modal de confirmación -->
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion{{ historia.id }}">
+                        Eliminar
+                    </button>
+                    {% endif %}
+                    {% endif %}   
+                </td>
+                
+                <td class="text-center">
+                    
+                    <!-- Modal de confirmación -->
+                    <div class="modal fade" id="confirmarEliminacion{{ historia.id }}" tabindex="-1" aria-labelledby="modalLabel{{ historia.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel{{ historia.id }}">Confirmar Eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas eliminar la historia clínica del paciente <strong>{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <a href="{% url 'eliminar_historia' historia.id %}" class="btn btn-danger">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p>No hay historias clínicas registradas</p>
+{% endif %}
+
+{% endblock %}

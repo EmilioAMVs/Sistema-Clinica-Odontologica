@@ -2,7 +2,6 @@ from django.urls import path
 from . import controllers
 
 urlpatterns = [
-    path('', controllers.home, name='home'),
     path('iniciar_sesion/', controllers.iniciar_sesion, name='iniciar_sesion'),        
     path('cerrar_sesion/', controllers.cerrar_sesion, name='cerrar_sesion'),
     path('listar_usuarios/', controllers.listar_usuarios, name='listar_usuarios'),

@@ -6,7 +6,7 @@ def role_required(allowed_roles):
     def decorator(view_func):
         def wrapper(request, *args, **kwargs):
             if not request.user.is_authenticated:
-                return redirect('signin')
+                return redirect('iniciar_sesion')
             usuario = Usuario.objects.get(user=request.user)
             if usuario.rol.nombre not in allowed_roles:
                 raise PermissionDenied

@@ -1,14 +1,14 @@
-# pacientes/forms.py
 from django import forms
-from .models import Paciente, HistoriaClinica
+from .models import Paciente
 
-class PacienteForm(forms.ModelForm):
+class PacienteCreationForm(forms.ModelForm):
     class Meta:
         model = Paciente
-        fields = ['nombre', 'apellido', 'edad', 'genero', 'direccion', 'telefono', 'email']  # Asegúrate de que los campos coincidan con el modelo
+        fields = ['nombre', 'apellido', 'edad', 'genero', 'direccion', 'telefono', 'email', 'hcl', 'tratamiento']
+        widgets = {'genero': forms.Select(choices=Paciente.GENERO_CHOICES)}
 
-class HistoriaClinicaForm(forms.ModelForm):
+class PacienteEditForm(forms.ModelForm):
     class Meta:
-        model = HistoriaClinica
-        fields = ['sintomas', 'observaciones']  # Puedes incluir otros campos si es necesario
-
+        model = Paciente
+        fields = ['nombre', 'apellido', 'edad', 'genero', 'direccion', 'telefono', 'email', 'tratamiento']
+        widgets = {'genero': forms.Select(choices=Paciente.GENERO_CHOICES)}

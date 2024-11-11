@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h2>Editar Historia Clínica de {{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-info mt-3" type="submit">Guardar Cambios</button>
+                <a href="{% url 'detalle_paciente' historia.paciente.id %}" class="btn btn-secondary mt-3">Cancelar</a>
+            </form>
+            {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

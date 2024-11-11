@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-cy2k00o)u12ckb_ag@6a&c^%s(o_rw-9i*cq=r&c628_&i-mop
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = [
+    'https://dentalsys.azurewebsites.net',  
+]
+
+ALLOWED_HOSTS = ['dentalsys.azurewebsites.net', '127.0.0.1','localhost']
 
 
 # Application definition
@@ -46,9 +50,11 @@ INSTALLED_APPS = [
     'tratamientos',
     'analisis',
     'clinica',
+    'hcl',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

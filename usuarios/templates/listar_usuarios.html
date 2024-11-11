@@ -64,11 +64,4 @@
     <p>No hay usuarios registrados</p>
 {% endif %}
 
-<!-- Mostrar mensaje de éxito al eliminar -->
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success mt-3">{{ message }}</div>
-    {% endfor %}
-{% endif %}
-
 {% endblock %}

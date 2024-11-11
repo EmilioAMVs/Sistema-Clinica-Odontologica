@@ -1,8 +1,9 @@
-from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect
+from functools import wraps     
 
 def role_required(roles):
     def decorator(view_func):
+        @wraps(view_func)
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated:
                 user_role = getattr(request.user.usuario, 'rol', None)
@@ -15,4 +16,4 @@ def role_required(roles):
 # Decoradores específicos para cada rol
 admin_required = role_required(['admin'])
 doctor_required = role_required(['doctor'])
-assistant_required = role_required(['asistente'])
+assistant_required = role_required(['ayudante'])
