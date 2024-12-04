@@ -85,9 +85,8 @@ def eliminar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
     if request.method == 'POST':
         usuario.delete()
-        messages.success(request, 'Usuario eliminado exitosamente.')
-        return redirect('listar_usuarios')
-    return render(request, 'eliminar_usuario.html', {'usuario': usuario})
+        messages.success(request, f'Usuario {usuario.user.username} eliminado exitosamente.')
+    return redirect('listar_usuarios')
 
 @admin_required
 def detalle_usuario(request, usuario_id):

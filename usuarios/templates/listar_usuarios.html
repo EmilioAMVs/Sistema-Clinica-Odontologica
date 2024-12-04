@@ -35,7 +35,7 @@
                     <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmarEliminacion{{ usuario.id }}">
                         Eliminar
                     </button>
-
+                    
                     <!-- Modal de confirmación -->
                     <div class="modal fade" id="confirmarEliminacion{{ usuario.id }}" tabindex="-1" aria-labelledby="modalLabel{{ usuario.id }}" aria-hidden="true">
                         <div class="modal-dialog">
@@ -49,7 +49,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <a href="{% url 'eliminar_usuario' usuario.id %}" class="btn btn-danger">Eliminar</a>
+                                    <form action="{% url 'eliminar_usuario' usuario.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

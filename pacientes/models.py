@@ -18,7 +18,6 @@ class Paciente(models.Model):
     hcl = models.CharField(max_length=10, unique=True, default='')  # Número de Historia Clínica (HCL)
     doctor_actual = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='pacientes_actuales')
     doctor_derivado = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='pacientes_derivados')
-    tratamiento = models.TextField(blank=True, null=True)  # Tratamiento inicial, si es necesario
 
     def __str__(self):
         return f'{self.nombre} {self.apellido} (HCL: {self.hcl})'

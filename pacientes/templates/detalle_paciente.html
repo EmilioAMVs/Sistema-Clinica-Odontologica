@@ -17,12 +17,11 @@
             <h4>Historias Clínicas:</h4>
             <ul>
                 {% for historia in historias_clinicas %}
-                    <li><a href="{% url 'detalle_historia_clinica' historia.id %}">Historia Clínica de {{ historia.fecha_creacion }}</a></li>
+                    <li><a href="{% url 'detalle_historia' historia.id %}">Historia Clínica de {{ historia.fecha_creacion }}</a></li>
                 {% empty %}
                     <li>No hay historias clínicas registradas.</li>
                 {% endfor %}
             </ul>
-            
             <a href="{% url 'listar_pacientes' %}" class="btn btn-secondary mt-3">Volver</a>
         </div>
     </div>

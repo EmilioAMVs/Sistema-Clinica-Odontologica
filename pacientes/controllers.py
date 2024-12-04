@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Paciente
+from usuarios.models import Usuario
 from hcl.models import HistoriaClinica  
 from .forms import PacienteCreationForm, PacienteEditForm
 from clinica.decorators import role_required
@@ -22,7 +23,7 @@ def listar_pacientes(request):
     return render(request, 'listar_pacientes.html', {'pacientes': pacientes})
 
 # Vista para crear un nuevo paciente, accesible solo para doctores
-@role_required(['admin','doctor'])
+@role_required(['admin', 'doctor'])
 def crear_paciente(request):
     if request.method == 'GET':
         return render(request, 'crear_paciente.html', {'form': PacienteCreationForm()})
@@ -30,9 +31,17 @@ def crear_paciente(request):
         form = PacienteCreationForm(request.POST)
         if form.is_valid():
             paciente = form.save(commit=False)
-            paciente.doctor_actual = request.user
+            doctor = Usuario.objects.get(user=request.user)
             paciente.save()
-            HistoriaClinica.objects.create(paciente=paciente, doctor_required=request.user)
+
+            # Crear la historia clínica asociada al paciente
+            HistoriaClinica.objects.create(
+                paciente=paciente,
+                doctor=doctor,
+                diagnostico="Diagnóstico inicial pendiente",
+                sintomas="Síntomas no especificados"
+            )
+
             messages.success(request, 'Paciente creado exitosamente.')
             return redirect('listar_pacientes')
         else:
@@ -65,18 +74,18 @@ def editar_paciente(request, paciente_id):
 # Vista para eliminar un paciente, accesible solo para doctores
 @role_required(['admin','doctor'])
 def eliminar_paciente(request, paciente_id):
-    paciente = get_object_or_404(Paciente, id=paciente_id, doctor_actual=request.user)
+    paciente = get_object_or_404(Paciente, id=paciente_id)
     
     if request.method == 'POST':
         paciente.delete()
         messages.success(request, 'Paciente eliminado exitosamente.')
-        return redirect('listar_pacientes')
-    return render(request, 'eliminar_paciente.html', {'paciente': paciente})
+    return redirect('listar_pacientes')
 
 # Vista de detalle para un paciente, accesible tanto para doctores como para ayudantes
 @role_required(['admin','doctor','ayudante'])
 def detalle_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
+    historias_clinicas = HistoriaClinica.objects.filter(paciente=paciente)
     
     context = {
         'paciente': paciente,
@@ -86,8 +95,8 @@ def detalle_paciente(request, paciente_id):
         'direccion': paciente.direccion,
         'telefono': paciente.telefono,
         'email': paciente.email,
-        'doctor_asignado': paciente.doctor_actual                                                                                                                              ,
-        'tratamiento': paciente.tratamiento,
-        'hcl': paciente.hcl
+        'doctor_asignado': paciente.doctor_actual,                                                                                                                              
+        'hcl': paciente.hcl,
+        'historias_clinicas': historias_clinicas
     }
     return render(request, 'detalle_paciente.html', context)

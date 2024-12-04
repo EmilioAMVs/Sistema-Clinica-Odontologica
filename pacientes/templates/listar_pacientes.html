@@ -15,9 +15,9 @@
                 <th class="text-center">Nombre</th>
                 <th class="text-center">Apellido</th>
                 <th class="text-center">Edad</th>
+                <th class="text-center">Genero</th>
                 <th class="text-center">Dirección</th>
                 <th class="text-center">Teléfono</th>
-                <th class="text-center">Tratamiento</th>
                 <th class="text-center">Historia Clínica</th>
                 <th class="text-center">Acciones</th>
             </tr>
@@ -28,13 +28,12 @@
                 <td class="text-center"><a href="{% url 'detalle_paciente' paciente.id %}">{{ paciente.nombre }}</a></td>
                 <td class="text-center">{{ paciente.apellido }}</td>
                 <td class="text-center">{{ paciente.edad }}</td>
+                <td class="text-center">{{ paciente.genero }}</td>
                 <td class="text-center">{{ paciente.direccion }}</td>
                 <td class="text-center">{{ paciente.telefono }}</td>
-                <td class="text-center">{{ paciente.tratamiento }}</td>
                 <td class="text-center">
                     <a href="{% url 'detalle_paciente' paciente.id %}" class="btn btn-info btn-sm">Ver Historia Clínica</a>
-                </td>
-                <td class="text-center"><a href="{% url 'detalle_paciente' paciente.id %}" class="btn btn-info btn-sm">Ver Detalles</a></td>
+                </td>   
                 {% if user.is_authenticated %}
                 {% if user.usuario.rol.nombre == 'doctor' or user.usuario.rol.nombre == 'admin' %}
                 <td class="text-center">
@@ -45,7 +44,7 @@
                     </button>
                 {% endif %}
                 {% endif %}
-                    <!-- Modal de confirmación -->
+                   <!-- Modal de confirmación -->
                     <div class="modal fade" id="confirmarEliminacion{{ paciente.id }}" tabindex="-1" aria-labelledby="modalLabel{{ paciente.id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -58,7 +57,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <a href="{% url 'eliminar_paciente' paciente.id %}" class="btn btn-danger">Eliminar</a>
+                                    <form action="{% url 'eliminar_paciente' paciente.id %}" method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

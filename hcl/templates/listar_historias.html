@@ -20,7 +20,7 @@
                 <th class="text-center">Paciente</th>
                 <th class="text-center">Fecha de Creación</th>
                 <th class="text-center">Doctor Asignado</th>
-                <th class="text-center">Tratamiento</th>
+                <th class="text-center">Diagnóstico</th>
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -29,8 +29,8 @@
             <tr>
                 <td class="text-center"><a href="{% url 'detalle_paciente' historia.paciente.id %}">{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</a></td>
                 <td class="text-center">{{ historia.fecha_creacion }}</td>
-                <td class="text-center">{{ historia.doctor_asignado.username }}</td>
-                <td class="text-center">{{ historia.tratamiento }}</td>
+                <td class="text-center">{{ historia.doctor }}</td>
+                <td class="text-center">{{ historia.diagnostico }}</td>
                 <td class="text-center">
                     <a href="{% url 'detalle_historia' historia.id %}" class="btn btn-info btn-sm">Ver Detalles</a>
                     {% if user.is_authenticated %}
