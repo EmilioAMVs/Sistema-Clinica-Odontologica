@@ -22,7 +22,19 @@ class HistoriaClinicaForm(forms.ModelForm):
     sintomas = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}), 
         label="Síntomas")
-
+    
+    tratamiento = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Tratamiento",
+        required=False
+    )
+    
+    resultado_exitoso = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label="Resultado exitoso",
+        required=False
+    )
+    
     class Meta:
         model = HistoriaClinica
-        fields = ['paciente', 'doctor', 'diagnostico']
+        fields = ['paciente', 'doctor', 'diagnostico', 'sintomas', 'tratamiento', 'resultado_exitoso']

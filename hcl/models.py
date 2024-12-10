@@ -7,6 +7,8 @@ class HistoriaClinica(models.Model):
     doctor = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, limit_choices_to={'rol__nombre': 'doctor'})
     diagnostico = models.TextField()
     sintomas = models.TextField()
+    tratamiento = models.CharField(max_length=255, blank=True, null=True)  # Tratamiento aplicado
+    resultado_exitoso = models.BooleanField(default=False)  # Indica si el tratamiento fue exitoso
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -16,3 +18,4 @@ class HistoriaClinica(models.Model):
         ordering = ['-fecha_creacion']
         verbose_name = 'Historia Clínica'
         verbose_name_plural = 'Historias Clínicas'
+    

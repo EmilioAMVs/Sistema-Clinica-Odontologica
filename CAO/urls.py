@@ -23,7 +23,6 @@ urlpatterns = [
     path('clinica/', include('clinica.urls')),           # Rutas para la app clinica
     path('pacientes/', include('pacientes.urls')),       # Rutas para la app pacientes
     path('tratamientos/', include('tratamientos.urls')), # Rutas para la app tratamientos
-    path('analisis/', include('analisis.urls')),         # Rutas para la app analisis
     path('usuarios/', include('usuarios.urls')),         # Rutas para la app usuarios
     path('hcl/', include('hcl.urls')),                   # Rutas para la app historias clinicas (hcl)
     path('', clinica_views.home, name='home'),           # Definir home como la vista raíz

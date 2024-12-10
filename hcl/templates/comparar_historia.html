@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Comparación de Historia Clínica</h2>
+    <p><strong>Paciente:</strong> {{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</p>
+    <p><strong>Edad:</strong> {{ historia.paciente.edad }}</p>
+    <p><strong>Género:</strong> {{ historia.paciente.get_genero_display }}</p>
+    <p><strong>Síntomas:</strong> {{ historia.sintomas }}</p>
+
+    <h4>Tratamientos Sugeridos</h4>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Tratamiento</th>
+                <th>Frecuencia</th>
+                <th>Porcentaje de Éxito</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sugerencia in sugerencias %}
+                <tr>
+                    <td>{{ sugerencia.tratamiento }}</td>
+                    <td>{{ sugerencia.frecuencia }}</td>
+                    <td>{{ sugerencia.porcentaje_exito|floatformat:2 }}%</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No se encontraron tratamientos similares.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'editar_historia' historia.id %}" class="btn btn-secondary mt-3">Volver a la Edición</a>
+</div>
+{% endblock %}
+x

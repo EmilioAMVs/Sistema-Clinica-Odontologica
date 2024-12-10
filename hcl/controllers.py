@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.db.models import Count, Q
 from .models import HistoriaClinica
 from .forms import HistoriaClinicaForm
 from pacientes.models import Paciente
@@ -55,3 +56,41 @@ def eliminar_historia(request, historia_id):
 def detalle_historia(request, historia_id):
     historia = get_object_or_404(HistoriaClinica, id=historia_id)
     return render(request, 'detalle_historia.html', {'historia': historia})
+
+@role_required(['admin','doctor'])
+def comparar_historia(request, historia_id):
+    historia_actual = get_object_or_404(HistoriaClinica, id=historia_id)
+
+    # Obtener historias similares según edad, género, y síntomas
+    historias_similares = HistoriaClinica.objects.filter(
+        paciente__edad__gte=historia_actual.paciente.edad - 5,
+        paciente__edad__lte=historia_actual.paciente.edad + 5,
+        paciente__genero=historia_actual.paciente.genero,
+        sintomas__icontains=historia_actual.sintomas  # Busca coincidencias en los síntomas
+    ).exclude(id=historia_actual.id)
+
+    # Calcular tratamientos más frecuentes y sus porcentajes de éxito
+    tratamiento_stats = (
+        historias_similares
+        .values('tratamiento')
+        .annotate(
+            total=Count('id'),
+            exitosos=Count('id', filter=Q(resultado_exitoso=True))
+        )
+        .order_by('-total')  # Ordenar por cantidad de uso
+    )
+
+    # Construir la lista de tratamientos sugeridos con porcentajes de éxito
+    sugerencias = [
+        {
+            'tratamiento': stat['tratamiento'],
+            'frecuencia': stat['total'],
+            'porcentaje_exito': (stat['exitosos'] / stat['total']) * 100 if stat['total'] > 0 else 0
+        }
+        for stat in tratamiento_stats if stat['tratamiento']
+    ]
+
+    return render(request, 'comparar_historia.html', {
+        'historia': historia_actual,
+        'sugerencias': sugerencias,
+    })

@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'usuarios',
     'pacientes',
     'tratamientos',
-    'analisis',
     'clinica',
     'hcl',
 ]

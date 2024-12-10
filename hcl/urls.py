@@ -7,4 +7,5 @@ urlpatterns = [
     path('detalle_historia/<int:historia_id>/', controllers.detalle_historia, name='detalle_historia'),
     path('editar_historia/<int:historia_id>/editar/', controllers.editar_historia, name='editar_historia'),
     path('eliminar_historia/<int:historia_id>/eliminar/', controllers.eliminar_historia, name='eliminar_historia'),
+    path('comparar_historia/<int:historia_id>/comparar/', controllers.comparar_historia, name='comparar_historia'),
 ]
