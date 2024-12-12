@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Editar Tratamiento</h1>
+<br>
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre del Tratamiento</label>
+        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ tratamiento.nombre }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required>{{ tratamiento.descripcion }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="costo" class="form-label">Costo</label>
+        <input type="number" id="costo" name="costo" class="form-control" value="{{ tratamiento.costo }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a href="{% url 'listar_tratamientos' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

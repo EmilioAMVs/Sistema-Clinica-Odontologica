@@ -1,15 +1,10 @@
-# forms.py en la app hcl
 from django import forms
 from .models import HistoriaClinica
 from pacientes.models import Paciente  # Asegúrate de que el modelo Paciente esté disponible en el form
 from usuarios.models import Usuario    # Asegúrate de que el modelo Usuario esté disponible
+from tratamientos.models import Tratamiento  # Asegúrate de que el modelo Tratamiento esté disponible
 
 class HistoriaClinicaForm(forms.ModelForm):
-    paciente = forms.ModelChoiceField(
-        queryset=Paciente.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label="Paciente"
-    )
     doctor = forms.ModelChoiceField(
         queryset=Usuario.objects.filter(rol__nombre='doctor'),
         widget=forms.Select(attrs={'class': 'form-control'}),
@@ -23,10 +18,14 @@ class HistoriaClinicaForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}), 
         label="Síntomas")
     
-    tratamiento = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label="Tratamiento",
-        required=False
+    tratamiento = forms.ModelChoiceField(
+        queryset=Tratamiento.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Tratamiento"
+    )
+    fecha_aplicacion_tratamiento = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Fecha de Aplicación"
     )
     
     resultado_exitoso = forms.BooleanField(
@@ -37,4 +36,6 @@ class HistoriaClinicaForm(forms.ModelForm):
     
     class Meta:
         model = HistoriaClinica
-        fields = ['paciente', 'doctor', 'diagnostico', 'sintomas', 'tratamiento', 'resultado_exitoso']
+        fields = [   'doctor', 'diagnostico', 'sintomas', 'tratamiento', 'fecha_aplicacion_tratamiento','resultado_exitoso']
+
+        

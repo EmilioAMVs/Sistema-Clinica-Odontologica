@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Historial de Tratamientos</h1>
+
+    <form method="get">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Tratamiento</th>
+          <th>Fecha de Aplicacion de Tratamiento</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for historia in historias_clinicas %}
+            <tr>
+              <td>{{ historia.paciente.nombre }} {{ historia.paciente.apellido }}</td>
+              <td>{{ historia.tratamiento.nombre }}</td>
+              <td>{{ historia.fecha_aplicacion_tratamiento }}</td>
+              </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

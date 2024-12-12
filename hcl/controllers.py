@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.db.models import Count, Q
 from .models import HistoriaClinica
 from .forms import HistoriaClinicaForm
-from pacientes.models import Paciente
 from clinica.decorators import role_required
+from tratamientos.models import Tratamiento
 
 @role_required(['admin','doctor','ayudante'])
 def listar_historias(request):
@@ -83,11 +83,11 @@ def comparar_historia(request, historia_id):
     # Construir la lista de tratamientos sugeridos con porcentajes de éxito
     sugerencias = [
         {
-            'tratamiento': stat['tratamiento'],
+            'tratamiento': Tratamiento.objects.get(id=stat['tratamiento']).nombre if stat['tratamiento'] else "No especificado",
             'frecuencia': stat['total'],
             'porcentaje_exito': (stat['exitosos'] / stat['total']) * 100 if stat['total'] > 0 else 0
         }
-        for stat in tratamiento_stats if stat['tratamiento']
+        for stat in tratamiento_stats if stat['tratamiento']    
     ]
 
     return render(request, 'comparar_historia.html', {

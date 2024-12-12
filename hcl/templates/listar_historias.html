@@ -21,6 +21,7 @@
                 <th class="text-center">Doctor Asignado</th>
                 <th class="text-center">Diagnóstico</th>
                 <th class="text-center">Tratamiento</th>
+                <th class="text-center">Fecha de Aplicación del Tratamiento</th>
                 <th class="text-center">Éxito</th>
                 <th class="text-center">Acciones</th>
             </tr>
@@ -32,7 +33,8 @@
                 <td class="text-center">{{ historia.fecha_creacion|date:"d/m/Y" }}</td>
                 <td class="text-center">{{ historia.doctor.user.username }}</td>
                 <td class="text-center">{{ historia.diagnostico }}</td>
-                <td class="text-center">{{ historia.tratamiento|default:"N/A" }}</td>
+                <td class="text-center">{{ historia.tratamiento }}</td>
+                <td class="text-center">{{ historia.fecha_aplicacion_tratamiento }}</td>
                 <td class="text-center">
                     {% if historia.resultado_exitoso %}
                         <span class="badge bg-success">Éxito</span>

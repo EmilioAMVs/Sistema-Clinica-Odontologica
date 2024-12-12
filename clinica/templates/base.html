@@ -44,6 +44,18 @@
                         {% else %}
                         {% endif %}
                     </li>
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'listar_tratamientos' %}">Tratamientos</a>
+                        {% else %}
+                        {% endif %}
+                    </li>
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        <a class="nav-link" href="{% url 'historial_tratamientos' %}">Historico</a>
+                        {% else %}
+                        {% endif %}
+                    </li>
                 </ul>
                 
                 <!-- Opciones de inicio de sesión a la derecha -->
