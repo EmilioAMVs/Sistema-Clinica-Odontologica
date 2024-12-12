@@ -114,8 +114,8 @@ DATABASES = {
 Ejecuta las migraciones para crear las tablas necesarias en la base de datos:
 
 ```bash
-Paso 5: Aplicar Migraciones
-Ejecuta las migraciones para crear las tablas necesarias en la base de datos:
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 
