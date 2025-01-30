@@ -5,6 +5,7 @@ from usuarios.models import Usuario
 from hcl.models import HistoriaClinica  
 from .forms import PacienteCreationForm, PacienteEditForm
 from clinica.decorators import role_required
+from .services import PacienteService
 
 def home(request):
     return render(request, 'home.html')
@@ -31,6 +32,7 @@ def crear_paciente(request):
         form = PacienteCreationForm(request.POST)
         if form.is_valid():
             paciente = form.save(commit=False)
+            paciente.hcl = PacienteService.generar_hcl()  # Asignar HCL antes de guardar
             doctor = Usuario.objects.get(user=request.user)
             paciente.save()
 
