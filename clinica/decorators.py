@@ -14,6 +14,6 @@ def role_required(roles):
     return decorator
 
 # Decoradores específicos para cada rol
-admin_required = role_required(['admin'])
+admin_required = role_required(['administrador'])
 doctor_required = role_required(['doctor'])
 assistant_required = role_required(['ayudante'])
