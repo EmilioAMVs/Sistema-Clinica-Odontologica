@@ -6,7 +6,7 @@ from .forms import HistoriaClinicaForm
 from clinica.decorators import role_required
 from tratamientos.models import Tratamiento
 
-@role_required(['admin','doctor','ayudante'])
+@role_required(['administrador','doctor','ayudante'])
 def listar_historias(request):
     historias = HistoriaClinica.objects.all()
     return render(request, 'listar_historias.html', {'historias': historias})
@@ -28,7 +28,7 @@ def crear_historia(request):
     return render(request, 'crear_historia.html', {'form': form})
 
 
-@role_required(['admin','doctor'])
+@role_required(['administrador','doctor'])
 def editar_historia(request, historia_id):
     historia = get_object_or_404(HistoriaClinica, id=historia_id)
     if request.method == 'POST':
@@ -42,7 +42,7 @@ def editar_historia(request, historia_id):
     return render(request, 'editar_historia.html', {'form': form, 'historia': historia})
 
 
-@role_required(['admin','doctor'])
+@role_required(['administrador','doctor'])
 def eliminar_historia(request, historia_id):
     historia = get_object_or_404(HistoriaClinica, id=historia_id)
     if request.method == 'POST':
@@ -52,12 +52,12 @@ def eliminar_historia(request, historia_id):
     return render(request, 'eliminar_historia.html', {'historia': historia})
 
 
-@role_required(['admin','doctor','ayudante'])
+@role_required(['administrador','doctor','ayudante'])
 def detalle_historia(request, historia_id):
     historia = get_object_or_404(HistoriaClinica, id=historia_id)
     return render(request, 'detalle_historia.html', {'historia': historia})
 
-@role_required(['admin','doctor'])
+@role_required(['administrador','doctor'])
 def comparar_historia(request, historia_id):
     historia_actual = get_object_or_404(HistoriaClinica, id=historia_id)
 

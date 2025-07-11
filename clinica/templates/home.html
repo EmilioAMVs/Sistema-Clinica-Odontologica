@@ -9,7 +9,7 @@
             <hr class="my-4">
             <p>Accede a tu dashboard para gestionar las funcionalidades de DentalSys.</p>
 
-            {% if user.usuario.rol.nombre == 'admin' %}
+            {% if user.usuario.rol.nombre == 'administrador' %}
                 <a class="btn btn-primary btn-lg mt-3" href="{% url 'admin_dashboard' %}" role="button">Ir al Dashboard de Administrador</a>
             {% elif user.usuario.rol.nombre == 'doctor' %}
                 <a class="btn btn-primary btn-lg mt-3" href="{% url 'doctor_dashboard' %}" role="button">Ir al Dashboard de Doctor</a>

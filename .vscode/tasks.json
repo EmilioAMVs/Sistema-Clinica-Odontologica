@@ -1,0 +1,18 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Ejecutar Servidor Django",
+			"type": "shell",
+			"command": "C:/Users/PC/Desktop/github/Sistema-Clinica-Odontologica/venv/Scripts/python.exe",
+			"args": [
+				"manage.py",
+				"runserver",
+				"127.0.0.1:8000"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

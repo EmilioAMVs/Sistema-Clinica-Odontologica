@@ -11,11 +11,11 @@ def home(request):
     return render(request, 'home.html')
 
 # Vista para listar pacientes, accesible para doctores y ayudantes
-@role_required(['admin','doctor','ayudante'])
+@role_required(['administrador','doctor','ayudante'])
 def listar_pacientes(request):
     if request.user.usuario.rol.nombre == 'doctor':
         pacientes = Paciente.objects.filter(doctor_actual=request.user)
-    elif request.user.usuario.rol.nombre == 'ayudante' or request.user.usuario.rol.nombre == 'admin':
+    elif request.user.usuario.rol.nombre == 'ayudante' or request.user.usuario.rol.nombre == 'administrador':
         pacientes = Paciente.objects.all()
     else:
         messages.error(request, "No tienes permiso para ver esta sección.")
@@ -24,7 +24,7 @@ def listar_pacientes(request):
     return render(request, 'listar_pacientes.html', {'pacientes': pacientes})
 
 # Vista para crear un nuevo paciente, accesible solo para doctores
-@role_required(['admin', 'doctor'])
+@role_required(['administrador', 'doctor'])
 def crear_paciente(request):
     if request.method == 'GET':
         return render(request, 'crear_paciente.html', {'form': PacienteCreationForm()})
@@ -53,7 +53,7 @@ def crear_paciente(request):
             })
 
 # Vista para editar un paciente existente, accesible solo para doctores
-@role_required(['admin','doctor'])
+@role_required(['administrador','doctor'])
 def editar_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     
@@ -74,7 +74,7 @@ def editar_paciente(request, paciente_id):
             })
 
 # Vista para eliminar un paciente, accesible solo para doctores
-@role_required(['admin','doctor'])
+@role_required(['administrador','doctor'])
 def eliminar_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     
@@ -84,7 +84,7 @@ def eliminar_paciente(request, paciente_id):
     return redirect('listar_pacientes')
 
 # Vista de detalle para un paciente, accesible tanto para doctores como para ayudantes
-@role_required(['admin','doctor','ayudante'])
+@role_required(['administrador','doctor','ayudante'])
 def detalle_paciente(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
     historias_clinicas = HistoriaClinica.objects.filter(paciente=paciente)

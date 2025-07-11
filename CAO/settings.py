@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'CAO.wsgi.application'
 import dj_database_url
 
 DATABASES = {
-  'default': dj_database_url.config(default='postgresql://postgres:WiRAmGyvGRUCVxvLJKFPPVqJUsIGvOSZ@autorack.proxy.rlwy.net:23418/railway')
+  'default': dj_database_url.config(default='postgresql://postgres:qUAbnzmrApzcNGHJasKPRRQptWqhQSLB@metro.proxy.rlwy.net:40900/railway')
 }
 
 
